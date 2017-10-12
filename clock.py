@@ -12,7 +12,7 @@ import threading
 
 class StopWatch(Frame):
     """实现一个秒表部件"""
-    msec = 100
+    msec = 50
 
     def __init__(self,parent = None,**kw):
         Frame.__init__(self,parent,kw)
@@ -32,12 +32,13 @@ class StopWatch(Frame):
 
     def _update(self):
         """用逝去的时间更新标签"""
-        #self._temptime = self._start - self._elapsedtime
+        self._temptime = self._start - self._elapsedtime
         self._elapsedtime = time.time() - self._starttime
-        self._setTime(self._start - self._elapsedtime)
-        self._timer = self.after(self.msec,self._update)
-        #if(self._temptime <= 0):
-        #    self.close()
+        if(self._temptime > 0):
+            self._setTime(self._start - self._elapsedtime)
+            self._timer = self.after(self.msec,self._update)
+        else:
+            self._setTime(0)
 
     def _setTime(self,elap):
         """将时间格式改为分:秒:百分秒"""
@@ -75,9 +76,12 @@ class StopWatch(Frame):
 if __name__ == "__main__":
     def popWindow():
         root = Tk()
+        root.title("Take a break!")
+        root.geometry('320x180')
         sw = StopWatch(root)
         sw.pack(side = TOP)
-        Button(root, text = 'quit', command = root.quit).pack(side = LEFT)
+        Button(root, text = 'BACK TO WORK', command = root.quit, fg='green',
+               bg='lightblue',width='320', height='25').pack(side = BOTTOM)
         root.mainloop()
         root.destroy()
 
